@@ -5,11 +5,16 @@ The smart contract connectivity problem
 Oracles => Any devide that interacts with the off-chain world to provide external data or computation to smart contracts
 
 ChainLink => Decentralized Oracle Network (Modular)
-	Cdkfjdan be costumized
+	can be costumized
 
 ChainLink Data Feeds 
 	Gets data from different exchanges and data providers
 	Passes the data through a series of chainlink nodes that figures out what is the actual price (data) 
 	Delivers the data through a single contract (reference contract, price feed contract, data contract) on chain
 	// data.chain.link
-3.51
+
+Chainlink VRF => function to create randomness
+Chainlink keepers => nodes that listen the events from contracts => once a trigger returns true the keeper runs the code
+End-to-end reliability => can make requests to APIs (You have to create the network so it works)
+
+
