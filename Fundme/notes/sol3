@@ -1,0 +1,18 @@
+We can use interfaces to interact with oracles
+(AggregatorV3Interface)
+
+We can import interfaces directly from github => chainlink has npm packages @chainlink/contracts
+
+msg.sender => address from the caller 
+
+Library lets you add functions to types
+
+We can import library as a contract with it's functions being internal and inside local contract:
+	"using <library name> for <type>"
+	*usiing PriceConverter for uint256*
+
+We can define a library the same way as a contract: "library <library name> {}"
+When you use the function on an object "this" will be the 1st parameter:
+	"msg.value.getConversionRate() == getConversionRate(msg.value)"
+
+
