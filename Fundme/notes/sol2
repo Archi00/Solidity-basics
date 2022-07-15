@@ -12,3 +12,4 @@ ChainLink Data Feeds
 	Passes the data through a series of chainlink nodes that figures out what is the actual price (data) 
 	Delivers the data through a single contract (reference contract, price feed contract, data contract) on chain
 	// data.chain.link
+3.51
