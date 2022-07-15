@@ -15,4 +15,4 @@ We can define a library the same way as a contract: "library <library name> {}"
 When you use the function on an object "this" will be the 1st parameter:
 	"msg.value.getConversionRate() == getConversionRate(msg.value)"
 
-
+We can also use the key word "this" to refer as the contract object.

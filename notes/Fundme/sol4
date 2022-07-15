@@ -1,0 +1,30 @@
+We have 3 different ways to send eth through a contract:
+	Transfer => Capped at 2300 gas, if more gas used throws error
+	Send => Capped at 2300 gas, if fails returns bool
+	Call
+
+When transfering balance to msg.sender for example, that would be the user that calls the function, 
+we need to cast the address into a payable address. 
+
+We need to specify that the address is payable => 
+	msg.sender == address
+	payable(msg.sender) == payable address
+
+The call function doesn't have a limit of gas used 
+call function can be used to interact with any contract/function this is passed in "()" if you don't want to interact with any external contract you can leave it as an empty string => ("")
+
+We can specify the value object for the call function as .call{value: <value>}("")
+Call function returns 2 items, a bool and a bytes (remember that bytes is an array so it has to be stored)
+
+Example of call function that would send all the eth stored in a contract to the caller of the function:
+	(bool callSuccess, bytes memory dataReturned) = payable(msg.sender).call{value: address(this).balance}("")
+	require(callSuccess, "Call failed")
+
+We cast the address from the msg.sender as a payable one => 
+We call the call function from this address => 
+We specify the value as the total balance of the address of "this" contract => 
+We can then access to the return items defining them between () => 
+returns the bool (true/false) if it fails or succeeds => 
+and returns data in form of an array of bytes => 
+We then can call the require function to fail check if the call function has succeeded or failed and revert or continue
+
