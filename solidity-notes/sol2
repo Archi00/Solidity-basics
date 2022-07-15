@@ -1,0 +1,21 @@
+Contracts can deploy another contracts
+Contracts can interact with each other => Composable
+
+import "./file.sol" => no need to name it as a variable
+
+Contracts like classes in js => can import and create: new Contract() //this deploys a new contract
+
+Files can have different solidity versions if one isn't lower than the other (if they are compatible)
+
+To interact with a contract you need the Address and the ABI => Application Binary Interface
+
+We can access this information inside Remix under the compilation tab => compilation details
+
+We can have a contract inherit the functions from another contract:
+Need to import the contract and then "Contract <ContractName> is <Imported Contract>"
+
+We can override functions with inheritance:
+	virtual or override
+	we need to specifier override declaration
+In order for a function to be overridable we need to add the key word virtual on the origian function declaration
+ 

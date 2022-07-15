@@ -1,0 +1,22 @@
+5 ways to store data in EVM:
+ Stack
+ Memory
+ Storage
+ Calldata
+ Code 
+ Logs
+
+calldata => doesn't allow to reasign the data inside the function
+temporary variable that isn't modifiable
+
+memory => allows to reassing the data insdide the function
+temporary variable that is modifiable
+
+storage => exists outside the transaction
+permanent variable that can be modified
+
+Data location can only be specified for array, struct or mapping types
+String == array of bytes
+
+mapping(string => uint256) public <variable name> // Creates a dictionary mapping a string to a uint
+
