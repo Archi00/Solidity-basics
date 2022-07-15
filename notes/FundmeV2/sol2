@@ -1,0 +1,26 @@
+Special Functions:
+	constructor()
+	receive()
+	fallback()
+
+Contract can only have 1 receive() function =>
+	declared using "receive() external payable {}" without the "function" keyword
+	cannot have args 
+	cannot return anything 
+	must have external visibility	
+	must have payable state mutability
+	it can be virtual
+	can override
+	can have modifiers
+
+If you call a function inside a contract you are populating the calldata with the info to call the function.
+
+If you interact with the contract without populating the calldata, receive() will get called. 
+
+For example if you send eth using the send button from metamask to the address of this contract, you are not calling the fund() function. In that case, as the fund function doesn't get called, we wouldn't track the funder or the msg.sender. 
+
+But, if we have a receive() function, if someone sends eth directly to the contract address without interacting with the fund() function, the receive() function will be called. 
+
+Fallback function is similar to the receive() function but can be called even when the calldata is populated. 
+
+calldata == msg.data
