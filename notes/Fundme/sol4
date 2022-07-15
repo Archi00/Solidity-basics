@@ -28,3 +28,4 @@ returns the bool (true/false) if it fails or succeeds =>
 and returns data in form of an array of bytes => 
 We then can call the require function to fail check if the call function has succeeded or failed and revert or continue
 
+Current accepted way to send eth through a contract is via call function.
