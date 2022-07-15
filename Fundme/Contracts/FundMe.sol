@@ -19,6 +19,12 @@ contract FundMe {
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
 
+    address public owner; 
+
+    constructor(){
+        owner = msg.sender;
+    }
+
     // payable key word makes transaction with eth available
     // makes this contract able to hold eth
     function fund() public payable {
@@ -31,7 +37,7 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value;
     }
 
-    function withdraw() public {
+    function withdraw() public onlyOwner {
         // loop through funders array and set the amount stored in the mapping 
         // for that address to 0
         for(uint256 i = 0; i < funders.length; i++) {
@@ -46,15 +52,15 @@ contract FundMe {
         // this would transfer all the eth inside the contract to the caller of the func
         // we also need to cast the address type (msg.sender) to a payable address
         // capped at 2300 gas limit, if fails throws error
-        payable(msg.sender).transfer(address(this).balance);
+        //payable(msg.sender).transfer(address(this).balance);
 
         // this function would do the same as the transfer function above
         // it's also capped at 2300 gas usage, if fails though
         // returns a bool
-        bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        //ool sendSuccess = payable(msg.sender).send(address(this).balance);
 
         // so we add the require function to throw an error if returns false
-        require(sendSuccess, "Send failed");
+        //require(sendSuccess, "Send failed");
 
         // this function does the same as the other 2
         // it doesn't have a limit of gas used
@@ -68,5 +74,13 @@ contract FundMe {
         require(callSuccess, "Call failed");
     }
 
+    // modifier key word, you can add this to any function declaration
+    // the function will run the code inside this modifier
+    // the _ represents the when the code inside the main function will run
+    // in this case first will run the require() and then the code from the main func
+    modifier onlyOwner {
+        require(msg.sender == owner, "Sender is not the owner!");
+        _;
+    }
 
 }
