@@ -1,0 +1,23 @@
+Constant and immutable
+If you need a variable that is set at deploy time and will not change =>
+we can use the constant key word to deifne it, won't take memory. 
+	Example: uint256 public constant minUsd = 50 * 1e18;
+
+Constant variables are defined in all caps separated by underscores = MIN_USD
+
+Variable defined in a different line that of which it has been declared but are constant we can use the key word immutable to define them.
+Good convention is to write it with an "i_" in front => 
+	Ex: address public immutable i_owner;
+
+We store them directly to the low level byte code of the contract
+
+From 0.8.4v of solidity we can create custom errors and trigger them with if statements instead of the require function. 
+
+The require function 2nd arg is an array, which has to be stored => this makes the contract more heavy using more gas. 
+
+Custom errors have to be defined outside the contract scope
+
+in the if statement we can use the revert key word to return the custom error.
+
+We can define the custom error with error key word: 
+	error NotOwner();
