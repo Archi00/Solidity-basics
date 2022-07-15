@@ -1,0 +1,22 @@
+All the transactions that we send have:
+	Nonce => tx count for the account
+	Gas Price => price per unit of gas (wei)
+	Gas Limit => max gas that this tx can use [value]
+	To => addres that the tx is sent to  [value, function]
+	Value => amount of wei to send 
+	Data => what to send to the To address (function call, deploy contract...) [value, function]
+	v,r,s => components of tx signature
+
+Value call can populate Gas Limit, To address and data
+Function call can populate To address, data
+
+Contract addresses can hold native tokens they have an address == wallet
+
+To access the value being sent we can use the property "value" inside the "msg" object. 
+	msg.value
+
+1e18 wei == 1 * 10 ** 18 == 1000000000000000000 == 1eth
+
+require built in function makes the condition passed as a must, if condition not met tx reverted with error message
+
+Tx reverted => undo any actions before and send remaining gas back 
