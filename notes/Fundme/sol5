@@ -1,0 +1,20 @@
+Constructor of a smart contracts is called when the contract is deployed to blockchain
+
+Modifier => Key word in the function declaration that modifies the function
+	constructor(){
+		owner = msg.sender;
+	}
+	modifier onlyOwner {
+		require(msg.sender == owner, "Sender is not owner!");
+		_;
+	}
+
+We can add this modifier into any function declaration:
+	function someFunction() public onlyOwner {}
+
+The underscore inside the modifier tells when to run the code inside the function.
+If the underscore is after the require() function, when the func => someFunction() is called will first run the require function, then the code inside someFunction()
+
+If the underscore is before the require(), someFunction() first will run the code inside this function and then the code inside the modifier.
+
+
