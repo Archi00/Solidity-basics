@@ -32,3 +32,33 @@ contractFactory accepts overrides for gasPrice, etc...
   // await sentTxResponse.wait(1);
 
 As js has problems with numbers and big numbers we should pass strings while using ethers
+
+We can encrypt the private key for the wallet if we don't want to store it to the .env file
+  //const encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf8");
+  // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+  //   encryptedJson,
+  //   process.env.PRIVATE_KEY_PASSWORD
+  // );
+  // wallet = await wallet.connect(provider);
+
+the script to encrypt the key is => 
+
+	const ethers = require("ethers");
+	const fs = require("fs-extra");
+	require("dotenv").config();
+
+	async function main() {
+	  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
+	  const encryptedJsonKey = await wallet.encrypt(
+	    process.env.PRIVATE_KEY_PASSWORD,
+	    process.env.PRIVATE_KEY
+	  );
+	  fs.writeFileSync("./.encryptedKey.json", encryptedJsonKey);
+	}
+
+	main()
+	  .then(() => process.exit(0))
+	  .catch((e) => {
+	    console.error(e);
+	    process.exit(1);
+	  });
