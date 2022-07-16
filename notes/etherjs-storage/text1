@@ -14,3 +14,21 @@ ethers.js powers hardhat
 
 With the abi and the bin files we can create a contract factory
 	new ethers.ContractFactory(abi, binary, wallet) 
+
+new ehters.ContractFactory(abi, binary, wallet) returns a promise we need to "await"
+contractFactory accepts overrides for gasPrice, etc...
+
+  // const nonce = await wallet.getTransactionCount();
+  // const tx = {
+  //   nonce: nonce,
+  //   gasPrice: 20000000000,
+  //   gasLimit: 6721975,
+  //   to: null,
+  //   value: 0,
+  //   data: "0x...",
+  //   chainId: 1337,
+  // };
+  // const sentTxResponse = await wallet.sendTransaction(tx);
+  // await sentTxResponse.wait(1);
+
+As js has problems with numbers and big numbers we should pass strings while using ethers
