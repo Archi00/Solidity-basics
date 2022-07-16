@@ -10,4 +10,7 @@ Some nodes expose an RPC URL that let's us connect or interact with the blockcha
 web3.js | ethers.js
 ethers.js powers hardhat
 
-yarn add ethers
+	yarn add ethers
+
+With the abi and the bin files we can create a contract factory
+	new ethers.ContractFactory(abi, binary, wallet) 
