@@ -4,3 +4,10 @@ Solc is the compiler we can use for solidity, we can use npm to install it:
 	npm install solc || yarn add solc
 
 yarn solcjs --bin --abi --include-path node_modules/ --base-path . -o . SimpleStorage.sol
+
+Some nodes expose an RPC URL that let's us connect or interact with the blockchain
+
+web3.js | ethers.js
+ethers.js powers hardhat
+
+yarn add ethers
