@@ -1,6 +1,7 @@
 const { ethers, run, network } = require("hardhat")
+require("dotenv").config()
 
-async function main() {
+const main = async () => {
     const SimpleStorageFactory = await ethers.getContractFactory(
         "SimpleStorage"
     )
@@ -8,7 +9,7 @@ async function main() {
     const simpleStorage = await SimpleStorageFactory.deploy()
     await simpleStorage.deployed()
     console.log(`Depoyed contract to: ${simpleStorage.address}`)
-    if (network.config.chainId === 4 && process.env.ETHERSCAN_API_KEY) {
+    if (network.config.chainId === 5 && process.env.ETHERSCAN_API_KEY) {
         console.log("Waiting for block confirmations...")
         await simpleStorage.deployTransaction.wait(6)
         await verify(simpleStorage.address, [])
@@ -23,7 +24,7 @@ async function main() {
     console.log(`Updated Value Number: ${updatedValue}`)
 }
 
-async function verify(contractAddress, args) {
+const verify = async (contractAddress, args) => {
     console.log("Verifying contract...")
     try {
         await run("verify:verify", {
