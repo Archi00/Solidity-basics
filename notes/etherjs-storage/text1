@@ -1,0 +1,6 @@
+Solidity is a synchronous language, so we will work with async js
+
+Solc is the compiler we can use for solidity, we can use npm to install it:
+	npm install solc || yarn add solc
+
+yarn solcjs --bin --abi --include-path node_modules/ --base-path . -o . SimpleStorage.sol
