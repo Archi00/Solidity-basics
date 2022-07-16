@@ -11,7 +11,7 @@ module.exports = {
     networks: {
         goerli: {
             url: GOERLI_RPC_URL,
-            account: [PRIVATE_KEY],
+            accounts: [PRIVATE_KEY],
             chainId: 5,
         },
     },
