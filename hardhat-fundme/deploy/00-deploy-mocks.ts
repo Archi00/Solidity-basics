@@ -7,22 +7,24 @@ import {
   INITIAL_ANSWER,
 } from "../helper-hardhat-config"
 
-const deployFundme: DeployFunction = async function (
+const deployMocks: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   const { getNamedAccounts, deployments, network } = hre
   const { deploy, log } = deployments
   const { deployer } = await getNamedAccounts()
-  const chainId: number = network.config.chainId!
 
-  if (devChains.includes(chainId.toString())) {
+  if (devChains.includes(network.name)) {
     log("Using local network...")
     await deploy("MockV3Aggregator", {
       from: deployer,
       log: true,
       args: [DECIMALS, INITIAL_ANSWER],
     })
+    log("Mocks deployed!")
+    log("-----------------------------------------------")
   }
 }
 
-export default deployFundme
+export default deployMocks
+deployMocks.tags = ["all", "mocks"]
