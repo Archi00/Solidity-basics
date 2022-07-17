@@ -17,3 +17,7 @@ export const networkConfig: networkConfigInfo = {
     ethUsdPriceFeedAddress: "0xF9680D99D6C9589e2a93a78A04A279e509205945",
   },
 }
+
+export const devChains: string[] = ["hardhat", "localhost"]
+export const DECIMALS: number = 0
+export const INITIAL_ANSWER: number = 200000000000
