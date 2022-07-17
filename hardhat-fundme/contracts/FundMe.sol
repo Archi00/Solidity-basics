@@ -16,12 +16,18 @@ contract FundMe {
 
   address public immutable i_owner;
 
-  constructor() {
+  AggregatorV3Interface public priceFeed;
+
+  constructor(address priceFeedAddress) {
     i_owner = msg.sender;
+    priceFeed = AggregatorV3Interface(priceFeedAddress);
   }
 
   function fund() public payable {
-    require(msg.value.getConversionRate() >= MIN_USD, "Didn't send enough");
+    require(
+      msg.value.getConversionRate(priceFeed) >= MIN_USD,
+      "Didn't send enough"
+    );
     funders.push(msg.sender);
 
     addressToAmountFunded[msg.sender] = msg.value;
