@@ -6,6 +6,7 @@ import "dotenv/config"
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "https://eth-goerli"
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xkey"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "key"
+const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL || "https://eth-rinkeby"
 // const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
 
 const config: HardhatUserConfig = {
@@ -19,6 +20,11 @@ const config: HardhatUserConfig = {
       url: GOERLI_RPC_URL,
       accounts: [PRIVATE_KEY],
       chainId: 5,
+    },
+    rinkeby: {
+      url: RINKEBY_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 4,
     },
   },
   solidity: {
