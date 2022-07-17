@@ -21,4 +21,11 @@ describe("SimpleStorage", function () {
         const currentValue = await simpleStorage.retrieve()
         assert.equal(currentValue.toString(), expectedValue)
     })
+    it("Should return the favorite number given the name of the person", async function () {
+        await simpleStorage.addPerson("Patrick", "7")
+        const favoriteNumber = await simpleStorage.nameToFavoriteNumber(
+            "Patrick"
+        )
+        assert.equal(favoriteNumber, "7")
+    })
 })
