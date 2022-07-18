@@ -1,5 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-import { assert } from "chai"
+import { assert, expect } from "chai"
+import { BigNumber } from "ethers"
 import { deployments, ethers, network } from "hardhat"
 import {
   Address,
@@ -13,6 +14,7 @@ describe("FundMe", async function () {
   let fundMe: FundMe
   let deployer: SignerWithAddress
   let MockV3Aggregator: MockV3Aggregator
+  const sendValue: BigNumber = ethers.utils.parseEther("1")
   beforeEach(async function () {
     if (!devChains.includes(network.name)) {
       throw "You need to be on a development chain to run tests"
@@ -20,14 +22,32 @@ describe("FundMe", async function () {
     const accounts: SignerWithAddress[] = await ethers.getSigners()
     deployer = accounts[0]
     const deploys = await deployments.fixture(["all"])
-    fundMe = await ethers.getContract("FundMe", deployer)
-    ;(MockV3Aggregator = await ethers.getContract("MockV3Aggregator")), deployer
+    fundMe = await ethers.getContract("FundMe")
+    MockV3Aggregator = await ethers.getContract("MockV3Aggregator")
   })
 
   describe("constructor", async function () {
     it("Sets the aggregator addresses correctly", async function () {
       const response: Address = await fundMe.s_priceFeed()
       assert.equal(response, MockV3Aggregator.address)
+    })
+  })
+
+  describe("fund", async function () {
+    it("Fails if you don't send enough ETH", async () => {
+      await expect(fundMe.fund()).to.be.revertedWith(
+        "You need to spend more ETH!"
+      )
+    })
+    it("Updated the amount funded data structure", async () => {
+      await fundMe.fund({ value: sendValue })
+      const response = await fundMe.s_addressToAmountFunded(deployer.address)
+      assert.equal(response.toString(), sendValue.toString())
+    })
+    it("Adds funder to array of funders", async () => {
+      await fundMe.fund({ value: sendValue })
+      const funder: Address = await fundMe.s_funders(0)
+      assert.equal(funder, deployer.address)
     })
   })
 })

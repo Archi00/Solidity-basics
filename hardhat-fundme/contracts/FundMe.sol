@@ -26,14 +26,6 @@ contract FundMe {
     s_owner = msg.sender;
   }
 
-  receive() external payable {
-    fund();
-  }
-
-  fallback() external payable {
-    fund();
-  }
-
   function fund() public payable {
     uint256 minimumUSD = 50 * 10**18;
     require(
