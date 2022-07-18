@@ -101,12 +101,10 @@ describe("FundMe", async () => {
       await expect(fundMe.s_funders(0)).to.be.reverted
 
       for (let i = 1, l = 6; i < l; i++) {
-        assert.equal(
-          await (
-            await fundMe.s_addressToAmountFunded(accounts[i].address)
-          ).toString(),
-          "0"
+        const balanceAccount: BigNumber = await fundMe.s_addressToAmountFunded(
+          accounts[i].address
         )
+        assert.equal(balanceAccount.toString(), "0")
       }
     })
   })
