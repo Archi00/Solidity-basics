@@ -3,8 +3,13 @@ import { assert, expect } from "chai"
 import { BigNumber, ContractReceipt, ContractTransaction } from "ethers"
 import { deployments, ethers, network } from "hardhat"
 import { Address } from "hardhat-deploy/dist/types"
+import { CustomError } from "hardhat/internal/hardhat-network/stack-traces/model"
 import { devChains } from "../../helper-hardhat-config"
-import { FundMe, MockV3Aggregator } from "../../typechain-types"
+import {
+  FundMe,
+  FundMe__factory,
+  MockV3Aggregator,
+} from "../../typechain-types"
 
 describe("FundMe", async () => {
   let fundMe: FundMe
@@ -79,33 +84,30 @@ describe("FundMe", async () => {
         finalDeployerBalance.add(withdrawGasCost).toString()
       )
     })
+
     it("Allows us to withdraw with multiple funders", async () => {
       const accounts: SignerWithAddress[] = await ethers.getSigners()
       for (let i = 1, l = 6; i < l; i++) {
         const fundMeConnectedContract: FundMe = fundMe.connect(accounts[i])
         fundMeConnectedContract.fund({ value: sendValue })
       }
-      const startingContractBalance: BigNumber =
-        await fundMe.provider.getBalance(fundMe.address)
-
-      const startingDeployerBalance: BigNumber =
-        await fundMe.provider.getBalance(deployer.address)
-
-      const transactionResponse: ContractTransaction = await fundMe.withdraw()
-      const transactionReceipt: ContractReceipt =
-        await transactionResponse.wait(1)
-
-      const { effectiveGasPrice, gasUsed } = transactionReceipt
-      const withdrawGasCost: BigNumber = gasUsed.mul(effectiveGasPrice)
-
+      await fundMe.withdraw()
       await expect(fundMe.s_funders(0)).to.be.reverted
-
       for (let i = 1, l = 6; i < l; i++) {
         const balanceAccount: BigNumber = await fundMe.s_addressToAmountFunded(
           accounts[i].address
         )
         assert.equal(balanceAccount.toString(), "0")
       }
+    })
+
+    it("Only allow the owner to withdraw", async () => {
+      const accounts: SignerWithAddress[] = await ethers.getSigners()
+      const attacker: SignerWithAddress = accounts[1]
+      const attackerConnectedContract: FundMe = fundMe.connect(attacker)
+      await expect(
+        attackerConnectedContract.withdraw()
+      ).to.be.revertedWithCustomError(fundMe, "FundMe__NotOwner")
     })
   })
 })
