@@ -55,13 +55,17 @@ describe("FundMe", async () => {
     it("Withdraw ETH from a single founder", async () => {
       const startingContractBalance: BigNumber =
         await fundMe.provider.getBalance(fundMe.address)
+
       const startingDeployerBalance: BigNumber =
         await fundMe.provider.getBalance(deployer.address)
+
       const transactionResponse: ContractTransaction = await fundMe.withdraw()
       const transactionReceipt: ContractReceipt =
         await transactionResponse.wait(1)
+
       const { effectiveGasPrice, gasUsed } = transactionReceipt
       const withdrawGasCost: BigNumber = gasUsed.mul(effectiveGasPrice)
+
       const finalContractBalance: BigNumber = await fundMe.provider.getBalance(
         fundMe.address
       )
@@ -74,6 +78,36 @@ describe("FundMe", async () => {
         startingContractBalance.add(startingDeployerBalance).toString(),
         finalDeployerBalance.add(withdrawGasCost).toString()
       )
+    })
+    it("Allows us to withdraw with multiple funders", async () => {
+      const accounts: SignerWithAddress[] = await ethers.getSigners()
+      for (let i = 1, l = 6; i < l; i++) {
+        const fundMeConnectedContract: FundMe = fundMe.connect(accounts[i])
+        fundMeConnectedContract.fund({ value: sendValue })
+      }
+      const startingContractBalance: BigNumber =
+        await fundMe.provider.getBalance(fundMe.address)
+
+      const startingDeployerBalance: BigNumber =
+        await fundMe.provider.getBalance(deployer.address)
+
+      const transactionResponse: ContractTransaction = await fundMe.withdraw()
+      const transactionReceipt: ContractReceipt =
+        await transactionResponse.wait(1)
+
+      const { effectiveGasPrice, gasUsed } = transactionReceipt
+      const withdrawGasCost: BigNumber = gasUsed.mul(effectiveGasPrice)
+
+      await expect(fundMe.s_funders(0)).to.be.reverted
+
+      for (let i = 1, l = 6; i < l; i++) {
+        assert.equal(
+          await (
+            await fundMe.s_addressToAmountFunded(accounts[i].address)
+          ).toString(),
+          "0"
+        )
+      }
     })
   })
 })
