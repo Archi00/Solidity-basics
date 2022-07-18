@@ -1,5 +1,5 @@
 export interface netWorkConfigItem {
-  ethUsdPriceFeedAddress: string
+  ethUsdPriceFeedAddress?: string
   blockConfirmations?: number
 }
 
@@ -8,6 +8,8 @@ export interface networkConfigInfo {
 }
 
 export const networkConfig: networkConfigInfo = {
+  hardhat: {},
+  localhost: {},
   rinkeby: {
     ethUsdPriceFeedAddress: "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e",
     blockConfirmations: 6,

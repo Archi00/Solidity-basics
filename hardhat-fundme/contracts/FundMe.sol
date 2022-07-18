@@ -6,10 +6,6 @@ import "./PriceConverter.sol";
 
 error FundMe__NotOwner();
 
-/// @title Contract for crowd funding
-/// @author Archi00
-/// @notice Demo a simple funding contract
-/// @dev Implements price feeds library
 contract FundMe {
   using PriceConverter for uint256;
 
@@ -38,7 +34,6 @@ contract FundMe {
     fund();
   }
 
-  /// @notice This function funds this contract
   function fund() public payable {
     uint256 minimumUSD = 50 * 10**18;
     require(

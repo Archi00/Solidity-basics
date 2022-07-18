@@ -9,5 +9,5 @@
     // "suppressImplicitAnyIndexErrors": true
   },
   "include": ["./scripts", "./test", "./deploy", "./deploy-helpers"],
-  "files": ["./hardhat.config.ts"]
+  "files": ["./hardhat.config.ts", "./helper-hardhat-config.ts"]
 }

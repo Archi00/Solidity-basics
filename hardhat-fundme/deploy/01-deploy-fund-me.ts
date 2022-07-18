@@ -1,5 +1,9 @@
 import verify from "../utils/verify"
-import { DeployFunction } from "hardhat-deploy/dist/types"
+import {
+  DeployFunction,
+  Deployment,
+  DeployResult,
+} from "hardhat-deploy/dist/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { devChains, networkConfig } from "../helper-hardhat-config"
 
@@ -11,20 +15,17 @@ const deployFundme: DeployFunction = async function (
   const { deployer } = await getNamedAccounts()
 
   let ethUsdPriceFeedAddress: string
-  if (!networkConfig[network.name])
-    return log(
-      `No price feed available for ${network.name}!\nPlease choose another network to deploy your contract!`
-    )
   if (devChains.includes(network.name)) {
-    const ethUsdAggregator = await get("MockV3Aggregator")
+    const ethUsdAggregator: Deployment = await get("MockV3Aggregator")
     ethUsdPriceFeedAddress = ethUsdAggregator.address
   } else {
     ethUsdPriceFeedAddress =
-      networkConfig[network.name]["ethUsdPriceFeedAddress"]
+      networkConfig[network.name]["ethUsdPriceFeedAddress"]!
   }
 
   const args: any[] = [ethUsdPriceFeedAddress]
-  const fundMe = await deploy("FundMe", {
+
+  const fundMe: DeployResult = await deploy("FundMe", {
     from: deployer,
     args: args,
     log: true,
@@ -37,6 +38,5 @@ const deployFundme: DeployFunction = async function (
   log("----------------------------------------------")
 }
 
-export default deployFundme
-
 deployFundme.tags = ["all", "fundMe"]
+export default deployFundme
