@@ -4,26 +4,47 @@ pragma solidity ^0.8.0;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
+error FundMe__NotOwner();
+
+/// @title Contract for crowd funding
+/// @author Archi00
+/// @notice Demo a simple funding contract
+/// @dev Implements price feeds library
 contract FundMe {
   using PriceConverter for uint256;
 
   mapping(address => uint256) public s_addressToAmountFunded;
   address[] public s_funders;
-  address public s_owner;
+  address public immutable s_owner;
   AggregatorV3Interface public s_priceFeed;
+
+  modifier onlyOwner() {
+    if (msg.sender != s_owner) {
+      revert FundMe__NotOwner();
+    }
+    _;
+  }
 
   constructor(address priceFeed) {
     s_priceFeed = AggregatorV3Interface(priceFeed);
     s_owner = msg.sender;
   }
 
+  receive() external payable {
+    fund();
+  }
+
+  fallback() external payable {
+    fund();
+  }
+
+  /// @notice This function funds this contract
   function fund() public payable {
     uint256 minimumUSD = 50 * 10**18;
     require(
       msg.value.getConversionRate(s_priceFeed) >= minimumUSD,
       "You need to spend more ETH!"
     );
-    // require(PriceConverter.getConversionRate(msg.value) >= minimumUSD, "You need to spend more ETH!");
     s_addressToAmountFunded[msg.sender] += msg.value;
     s_funders.push(msg.sender);
   }
@@ -32,11 +53,7 @@ contract FundMe {
     return s_priceFeed.version();
   }
 
-  modifier onlyOwner() {
-    require(msg.sender == s_owner);
-    _;
-  }
-
+  /// @notice This function withrdraws all the funds from this contract if the call is made by the owner
   function withdraw() public payable onlyOwner {
     payable(msg.sender).transfer(address(this).balance);
     for (
