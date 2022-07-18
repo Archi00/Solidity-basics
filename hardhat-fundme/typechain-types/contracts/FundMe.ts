@@ -28,9 +28,9 @@ export interface FundMeInterface extends utils.Interface {
     "cheaperWithdraw()": FunctionFragment;
     "fund()": FunctionFragment;
     "getVersion()": FunctionFragment;
+    "i_owner()": FunctionFragment;
     "s_addressToAmountFunded(address)": FunctionFragment;
     "s_funders(uint256)": FunctionFragment;
-    "s_owner()": FunctionFragment;
     "s_priceFeed()": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
@@ -40,9 +40,9 @@ export interface FundMeInterface extends utils.Interface {
       | "cheaperWithdraw"
       | "fund"
       | "getVersion"
+      | "i_owner"
       | "s_addressToAmountFunded"
       | "s_funders"
-      | "s_owner"
       | "s_priceFeed"
       | "withdraw"
   ): FunctionFragment;
@@ -56,6 +56,7 @@ export interface FundMeInterface extends utils.Interface {
     functionFragment: "getVersion",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "i_owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "s_addressToAmountFunded",
     values: [PromiseOrValue<string>]
@@ -64,7 +65,6 @@ export interface FundMeInterface extends utils.Interface {
     functionFragment: "s_funders",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "s_owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "s_priceFeed",
     values?: undefined
@@ -77,12 +77,12 @@ export interface FundMeInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "fund", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVersion", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "i_owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "s_addressToAmountFunded",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "s_funders", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "s_owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "s_priceFeed",
     data: BytesLike
@@ -129,6 +129,8 @@ export interface FundMe extends BaseContract {
 
     getVersion(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    i_owner(overrides?: CallOverrides): Promise<[string]>;
+
     s_addressToAmountFunded(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -138,8 +140,6 @@ export interface FundMe extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    s_owner(overrides?: CallOverrides): Promise<[string]>;
 
     s_priceFeed(overrides?: CallOverrides): Promise<[string]>;
 
@@ -158,6 +158,8 @@ export interface FundMe extends BaseContract {
 
   getVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
+  i_owner(overrides?: CallOverrides): Promise<string>;
+
   s_addressToAmountFunded(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -167,8 +169,6 @@ export interface FundMe extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
-
-  s_owner(overrides?: CallOverrides): Promise<string>;
 
   s_priceFeed(overrides?: CallOverrides): Promise<string>;
 
@@ -183,6 +183,8 @@ export interface FundMe extends BaseContract {
 
     getVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
+    i_owner(overrides?: CallOverrides): Promise<string>;
+
     s_addressToAmountFunded(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -192,8 +194,6 @@ export interface FundMe extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    s_owner(overrides?: CallOverrides): Promise<string>;
 
     s_priceFeed(overrides?: CallOverrides): Promise<string>;
 
@@ -213,6 +213,8 @@ export interface FundMe extends BaseContract {
 
     getVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
+    i_owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     s_addressToAmountFunded(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -222,8 +224,6 @@ export interface FundMe extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    s_owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     s_priceFeed(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -243,6 +243,8 @@ export interface FundMe extends BaseContract {
 
     getVersion(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    i_owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     s_addressToAmountFunded(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -252,8 +254,6 @@ export interface FundMe extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    s_owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     s_priceFeed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

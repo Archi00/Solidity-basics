@@ -11,11 +11,11 @@ contract FundMe {
 
   mapping(address => uint256) public s_addressToAmountFunded;
   address[] public s_funders;
-  address public immutable s_owner;
+  address public immutable i_owner;
   AggregatorV3Interface public s_priceFeed;
 
   modifier onlyOwner() {
-    if (msg.sender != s_owner) {
+    if (msg.sender != i_owner) {
       revert FundMe__NotOwner();
     }
     _;
@@ -23,7 +23,7 @@ contract FundMe {
 
   constructor(address priceFeed) {
     s_priceFeed = AggregatorV3Interface(priceFeed);
-    s_owner = msg.sender;
+    i_owner = msg.sender;
   }
 
   function fund() public payable {
@@ -54,14 +54,15 @@ contract FundMe {
     s_funders = new address[](0);
   }
 
+  /// @dev Reads funders array from storage once and saves it to memory so we don't have to keep reading from storage
   function cheaperWithdraw() public payable onlyOwner {
-    payable(msg.sender).transfer(address(this).balance);
     address[] memory funders = s_funders;
-    // mappings can't be in memory, sorry!
     for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
       address funder = funders[funderIndex];
       s_addressToAmountFunded[funder] = 0;
     }
     s_funders = new address[](0);
+    (bool success, ) = i_owner.call{value: address(this).balance}("");
+    require(success);
   }
 }
