@@ -22,6 +22,14 @@ contract FundMe {
     _;
   }
 
+  receive() external payable {
+    fund();
+  }
+
+  fallback() external payable {
+    fund();
+  }
+
   constructor(address priceFeed) {
     s_priceFeed = AggregatorV3Interface(priceFeed);
     i_owner = msg.sender;
