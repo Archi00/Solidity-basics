@@ -25,68 +25,72 @@ import type {
 
 export interface FundMeInterface extends utils.Interface {
   functions: {
+    "MIN_USD()": FunctionFragment;
     "cheaperWithdraw()": FunctionFragment;
     "fund()": FunctionFragment;
+    "getAddressToAmountFunded(address)": FunctionFragment;
+    "getFunder(uint256)": FunctionFragment;
+    "getOwner()": FunctionFragment;
+    "getPriceFeed()": FunctionFragment;
     "getVersion()": FunctionFragment;
-    "i_owner()": FunctionFragment;
-    "s_addressToAmountFunded(address)": FunctionFragment;
-    "s_funders(uint256)": FunctionFragment;
-    "s_priceFeed()": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "MIN_USD"
       | "cheaperWithdraw"
       | "fund"
+      | "getAddressToAmountFunded"
+      | "getFunder"
+      | "getOwner"
+      | "getPriceFeed"
       | "getVersion"
-      | "i_owner"
-      | "s_addressToAmountFunded"
-      | "s_funders"
-      | "s_priceFeed"
       | "withdraw"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "MIN_USD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "cheaperWithdraw",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "fund", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getVersion",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "i_owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "s_addressToAmountFunded",
+    functionFragment: "getAddressToAmountFunded",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "s_funders",
+    functionFragment: "getFunder",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "getOwner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "s_priceFeed",
+    functionFragment: "getPriceFeed",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVersion",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "MIN_USD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "cheaperWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "fund", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAddressToAmountFunded",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getFunder", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getOwner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPriceFeed",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getVersion", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "i_owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "s_addressToAmountFunded",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "s_funders", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "s_priceFeed",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {};
@@ -119,6 +123,8 @@ export interface FundMe extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    MIN_USD(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     cheaperWithdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -127,26 +133,28 @@ export interface FundMe extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getVersion(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    i_owner(overrides?: CallOverrides): Promise<[string]>;
-
-    s_addressToAmountFunded(
-      arg0: PromiseOrValue<string>,
+    getAddressToAmountFunded(
+      _funder: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    s_funders(
-      arg0: PromiseOrValue<BigNumberish>,
+    getFunder(
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    s_priceFeed(overrides?: CallOverrides): Promise<[string]>;
+    getOwner(overrides?: CallOverrides): Promise<[string]>;
+
+    getPriceFeed(overrides?: CallOverrides): Promise<[string]>;
+
+    getVersion(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     withdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  MIN_USD(overrides?: CallOverrides): Promise<BigNumber>;
 
   cheaperWithdraw(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -156,46 +164,48 @@ export interface FundMe extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getVersion(overrides?: CallOverrides): Promise<BigNumber>;
-
-  i_owner(overrides?: CallOverrides): Promise<string>;
-
-  s_addressToAmountFunded(
-    arg0: PromiseOrValue<string>,
+  getAddressToAmountFunded(
+    _funder: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  s_funders(
-    arg0: PromiseOrValue<BigNumberish>,
+  getFunder(
+    _index: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  s_priceFeed(overrides?: CallOverrides): Promise<string>;
+  getOwner(overrides?: CallOverrides): Promise<string>;
+
+  getPriceFeed(overrides?: CallOverrides): Promise<string>;
+
+  getVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
   withdraw(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    MIN_USD(overrides?: CallOverrides): Promise<BigNumber>;
+
     cheaperWithdraw(overrides?: CallOverrides): Promise<void>;
 
     fund(overrides?: CallOverrides): Promise<void>;
 
-    getVersion(overrides?: CallOverrides): Promise<BigNumber>;
-
-    i_owner(overrides?: CallOverrides): Promise<string>;
-
-    s_addressToAmountFunded(
-      arg0: PromiseOrValue<string>,
+    getAddressToAmountFunded(
+      _funder: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    s_funders(
-      arg0: PromiseOrValue<BigNumberish>,
+    getFunder(
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    s_priceFeed(overrides?: CallOverrides): Promise<string>;
+    getOwner(overrides?: CallOverrides): Promise<string>;
+
+    getPriceFeed(overrides?: CallOverrides): Promise<string>;
+
+    getVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(overrides?: CallOverrides): Promise<void>;
   };
@@ -203,6 +213,8 @@ export interface FundMe extends BaseContract {
   filters: {};
 
   estimateGas: {
+    MIN_USD(overrides?: CallOverrides): Promise<BigNumber>;
+
     cheaperWithdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -211,21 +223,21 @@ export interface FundMe extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    getAddressToAmountFunded(
+      _funder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getFunder(
+      _index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOwner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getPriceFeed(overrides?: CallOverrides): Promise<BigNumber>;
+
     getVersion(overrides?: CallOverrides): Promise<BigNumber>;
-
-    i_owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    s_addressToAmountFunded(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    s_funders(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    s_priceFeed(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -233,6 +245,8 @@ export interface FundMe extends BaseContract {
   };
 
   populateTransaction: {
+    MIN_USD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     cheaperWithdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -241,21 +255,21 @@ export interface FundMe extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    getAddressToAmountFunded(
+      _funder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getFunder(
+      _index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getPriceFeed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getVersion(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    i_owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    s_addressToAmountFunded(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    s_funders(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    s_priceFeed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }

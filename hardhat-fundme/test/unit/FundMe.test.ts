@@ -29,7 +29,7 @@ describe("FundMe", async () => {
 
   describe("constructor", async () => {
     it("Sets the aggregator addresses correctly", async () => {
-      const response: Address = await fundMe.s_priceFeed()
+      const response: Address = await fundMe.getPriceFeed()
       assert.equal(response, MockV3Aggregator.address)
     })
   })
@@ -42,12 +42,12 @@ describe("FundMe", async () => {
     })
     it("Updated the amount funded data structure", async () => {
       await fundMe.fund({ value: sendValue })
-      const response = await fundMe.s_addressToAmountFunded(deployer.address)
+      const response = await fundMe.getAddressToAmountFunded(deployer.address)
       assert.equal(response.toString(), sendValue.toString())
     })
     it("Adds funder to array of funders", async () => {
       await fundMe.fund({ value: sendValue })
-      const funder: Address = await fundMe.s_funders(0)
+      const funder: Address = await fundMe.getFunder(0)
       assert.equal(funder, deployer.address)
     })
   })
@@ -92,9 +92,9 @@ describe("FundMe", async () => {
         fundMeConnectedContract.fund({ value: sendValue })
       }
       await fundMe.withdraw()
-      await expect(fundMe.s_funders(0)).to.be.reverted
+      await expect(fundMe.getFunder(0)).to.be.reverted
       for (let i = 1, l = 6; i < l; i++) {
-        const balanceAccount: BigNumber = await fundMe.s_addressToAmountFunded(
+        const balanceAccount: BigNumber = await fundMe.getAddressToAmountFunded(
           accounts[i].address
         )
         assert.equal(balanceAccount.toString(), "0")
@@ -152,9 +152,9 @@ describe("FundMe", async () => {
         fundMeConnectedContract.fund({ value: sendValue })
       }
       await fundMe.cheaperWithdraw()
-      await expect(fundMe.s_funders(0)).to.be.reverted
+      await expect(fundMe.getFunder(0)).to.be.reverted
       for (let i = 1, l = 6; i < l; i++) {
-        const balanceAccount: BigNumber = await fundMe.s_addressToAmountFunded(
+        const balanceAccount: BigNumber = await fundMe.getAddressToAmountFunded(
           accounts[i].address
         )
         assert.equal(balanceAccount.toString(), "0")
