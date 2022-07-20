@@ -4,8 +4,12 @@ pragma solidity ^0.8.7;
 error Raffle__NotEnoughEthEntered();
 
 contract Raffle {
+    /* State Variables  */
     uint256 private immutable i_entranceFee;
     address payable[] private s_players;
+
+    /* Events */
+    event RaffleEnter(address indexed _player):
 
     constructor(uint256 entraceFee) {
         i_entranceFee = entraceFee;
@@ -16,6 +20,7 @@ contract Raffle {
             revert Raffle__NotEnoughEthEntered(); 
         }
         s_players.push(payable(msg.sender));
+        emit RaffleEnter(msg.sender);
     }
 
     function getEntranceFee() public view returns (uint256) {
