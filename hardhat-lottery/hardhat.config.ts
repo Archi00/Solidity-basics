@@ -6,7 +6,7 @@ import "hardhat-gas-reporter"
 import "dotenv/config"
 import "solidity-coverage"
 import "hardhat-deploy"
-import { HardhatUserConfig } from "hardhat/config"
+import "hardhat/config"
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
