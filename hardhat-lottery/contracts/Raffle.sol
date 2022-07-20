@@ -9,10 +9,10 @@ contract Raffle {
     address payable[] private s_players;
 
     /* Events */
-    event RaffleEnter(address indexed _player):
+    event RaffleEnter(address indexed _player);
 
-    constructor(uint256 entraceFee) {
-        i_entranceFee = entraceFee;
+    constructor(uint256 _entraceFee) {
+        i_entranceFee = _entraceFee;
     }
 
     function enterRaffe() public payable {
