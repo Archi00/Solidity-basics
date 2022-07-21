@@ -7,6 +7,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 
 /* Custom errors */
 error Raffle__NotEnoughEthEntered();
+error Raffle__TransferFailed();
 
 contract Raffle is VRFConsumerBaseV2 {
   /* State Variables  */
@@ -19,22 +20,26 @@ contract Raffle is VRFConsumerBaseV2 {
   uint16 private constant REQUEST_CONFIRMATIONS = 3;
   uint32 private constant NUM_WORDS = 1;
 
+  /* Lottery Variables */
+  address s_recentWinner;
+
   /* Events */
-  event RaffleEnter(address indexed _player);
-  event RequestedRaffleWinner(uint256 indexed _requestId);
+  event RaffleEnter(address indexed player);
+  event RequestedRaffleWinner(uint256 indexed requestId);
+  event WinnerPicked(address indexed winner);
 
   constructor(
-    address _vrfCoordinatorV2,
-    uint256 _entraceFee,
-    bytes32 _gasLane,
-    uint64 _subscriptionId,
-    uint32 _callbackGasLimit
-  ) VRFConsumerBaseV2(_vrfCoordinatorV2) {
-    i_entranceFee = _entraceFee;
-    i_vrfCoordinator = VRFCoordinatorV2Interface(_vrfCoordinatorV2);
-    i_gasLane = _gasLane;
-    i_subscriptionId = _subscriptionId;
-    i_callbackGasLimit = _callbackGasLimit;
+    address vrfCoordinatorV2,
+    uint256 entraceFee,
+    bytes32 gasLane,
+    uint64 subscriptionId,
+    uint32 callbackGasLimit
+  ) VRFConsumerBaseV2(vrfCoordinatorV2) {
+    i_entranceFee = entraceFee;
+    i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
+    i_gasLane = gasLane;
+    i_subscriptionId = subscriptionId;
+    i_callbackGasLimit = callbackGasLimit;
   }
 
   function enterRaffe() public payable {
@@ -56,14 +61,25 @@ contract Raffle is VRFConsumerBaseV2 {
     emit RequestedRaffleWinner(requestId);
   }
 
-  function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {}
+  function fulfillRandomWords(uint256 /* requestId */, uint256[] memory randomWords) internal override {
+    uint256 indexOfWinner = randomWords[0] % s_players.length;
+    address payable recentWinner = s_players[indexOfWinner];
+    s_recentWinner = recentWinner;
+    (bool success, ) = recentWinner.call{ value: address(this).balance }("");
+    if (!success) { revert Raffle__TransferFailed(); }
+    emit WinnerPicked(recentWinner);
+  }
 
   /* View / Pure functions */
   function getEntranceFee() public view returns (uint256) {
     return i_entranceFee;
   }
 
-  function getPlayers(uint256 _index) public view returns (address) {
-    return s_players[_index];
+  function getPlayers(uint256 index) public view returns (address) {
+    return s_players[index];
+  }
+
+  function getRecentWinner() public view returns (address) {
+    return s_recentWinner;
   }
 }
