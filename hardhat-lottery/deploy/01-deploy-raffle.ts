@@ -15,7 +15,6 @@ const deployRaffle: DeployFunction = async function (hre: HardhatRuntimeEnvironm
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     let vrfCoordinatorV2Address, subscriptionId
-    log(network.name)
 
     if (devChains.includes(network.name)) {
         const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
