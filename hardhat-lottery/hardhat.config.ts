@@ -23,23 +23,7 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: { chainId: 31337 },
         localhost: { chainId: 31337 },
-        goerli: {
-            url: GOERLI_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 5,
-        },
-        rinkeby: {
-            url: RINKEBY_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 4,
-        },
-        kovan: {
-            url: KOVAN_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 69,
-        },
     },
-    namedAccounts: { deployer: { default: 0 }, player: { default: 1 } },
     solidity: { compilers: [{ version: "0.8.8" }, { version: "0.4.24" }] },
 }
 export default config
