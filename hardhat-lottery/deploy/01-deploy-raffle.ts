@@ -6,6 +6,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import { ethers, network } from "hardhat"
 import { networkConfig } from "../helper-hardhat-config"
+import verify from "../utils/verify"
 
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("2")
 
@@ -33,7 +34,7 @@ const deployRaffle: DeployFunction = async function (hre: HardhatRuntimeEnvironm
     const callbackGasLimit = networkConfig[network.name]["callbackGasLimit"]
     const interval = networkConfig[network.name]["interval"]
 
-    const args = [
+    const args: any[] = [
         vrfCoordinatorV2Address,
         entranceFee,
         gasLane,
@@ -47,6 +48,11 @@ const deployRaffle: DeployFunction = async function (hre: HardhatRuntimeEnvironm
         log: true,
         waitConfirmations: WAIT_BLOCKS,
     })
+
+    if (!devChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+        log(`Verifying ${raffle.address}...`)
+        await verify(raffle.address, args)
+    }
 }
 
 export default deployRaffle
