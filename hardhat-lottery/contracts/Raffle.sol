@@ -77,7 +77,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     /// @dev  Function that Chainlink keeper nodes call
     function checkUpkeep(
-        bytes calldata /* checkData */
+        bytes memory /* checkData */
     )
         public
         override
@@ -149,7 +149,19 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         return s_raffleState;
     }
 
-    function getNumWords() public view returns (uint256) {
+    function getNumWords() public pure returns (uint256) {
         return NUM_WORDS;
+    }
+
+    function getNumPlayers() public view returns (uint256) {
+        return s_players.length;
+    }
+
+    function getLatestTimestamp() public view returns (uint256) {
+        return s_lastTimestamp;
+    }
+
+    function getRequestConfirmations() public pure returns (uint256) {
+        return REQUEST_CONFIRMATIONS;
     }
 }
