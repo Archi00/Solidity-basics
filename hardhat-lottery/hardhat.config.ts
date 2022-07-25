@@ -39,6 +39,7 @@ const config: HardhatUserConfig = {
             chainId: 69,
         },
     },
+    namedAccounts: { deployer: { default: 0 } },
     solidity: { compilers: [{ version: "0.8.8" }, { version: "0.4.24" }] },
 }
 export default config
