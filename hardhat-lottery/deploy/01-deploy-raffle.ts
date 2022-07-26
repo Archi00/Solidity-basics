@@ -54,5 +54,5 @@ const deployRaffle: DeployFunction = async function (hre: HardhatRuntimeEnvironm
     }
 }
 
-deployRaffle.tags = ["all", "raffle"]
 export default deployRaffle
+deployRaffle.tags = ["all", "raffle"]
