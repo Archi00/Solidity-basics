@@ -41,5 +41,12 @@ const config: HardhatUserConfig = {
     },
     namedAccounts: { deployer: { default: 0 } },
     solidity: { compilers: [{ version: "0.8.8" }, { version: "0.4.24" }] },
+    gasReporter: {
+        enabled: false,
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
+        // coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    },
 }
 export default config
