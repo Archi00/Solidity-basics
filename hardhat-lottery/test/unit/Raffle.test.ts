@@ -59,4 +59,22 @@ import { BigNumber } from "ethers"
                   )
               })
           })
+          describe("checkUpKeep", async () => {
+              it("returns false if players haven't sent any ETH", async () => {
+                  await provider.send("evm_increaseTime", [interval.toNumber() + 1])
+                  await provider.send("evm_mine", [])
+                  const { upkeepNeeded } = await raffle.callStatic.checkUpkeep([])
+                  assert(!upkeepNeeded)
+              })
+              it("returns false if raffle isn't open", async () => {
+                  await raffle.enterRaffle({ value: entranceFee })
+                  await provider.send("evm_increaseTime", [interval.toNumber() + 1])
+                  await provider.send("evm_mine", [])
+                  await raffle.performUpkeep([])
+                  const raffleState = (await raffle.getRaffleState()).toString()
+                  const { upkeepNeeded } = await raffle.callStatic.checkUpkeep([])
+                  assert.equal(raffleState, "1")
+                  assert.equal(upkeepNeeded, false)
+              })
+          })
       })

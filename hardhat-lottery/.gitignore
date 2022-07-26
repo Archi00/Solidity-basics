@@ -8,3 +8,5 @@ typechain-types
 deployments
 typechain
 gas-report.txt
+coverage
+coverage.json
