@@ -31,5 +31,5 @@ export const networkConfig: networkConfigInfo = {
         interval: "30",
     },
 }
-export const VERIFICATION_BLOCK_CONFIRMATIONS = 6
+export const VERIFICATION_BLOCK_CONFIRMATIONS = 3
 export const devChains = ["localhost", "hardhat"]
