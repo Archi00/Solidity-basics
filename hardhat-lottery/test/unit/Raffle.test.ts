@@ -13,6 +13,8 @@ import { BigNumber } from "ethers"
           let entranceFee: BigNumber
           let deployer: string
 
+          const { provider } = network
+
           beforeEach(async function () {
               deployer = (await getNamedAccounts()).deployer
               await deployments.fixture(["all"])
@@ -44,6 +46,16 @@ import { BigNumber } from "ethers"
                   await expect(raffle.enterRaffle({ value: entranceFee })).to.emit(
                       raffle,
                       "RaffleEnter"
+                  )
+              })
+              it("doesn't allow entrance when raffle is calculating", async () => {
+                  await raffle.enterRaffle({ value: entranceFee })
+                  await provider.send("evm_increaseTime", [interval.toNumber() + 1])
+                  await provider.send("evm_mine", [])
+
+                  await raffle.performUpkeep([])
+                  await expect(raffle.enterRaffle({ value: entranceFee })).to.be.revertedWith(
+                      "Raffle_NotOpen"
                   )
               })
           })
