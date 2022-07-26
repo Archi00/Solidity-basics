@@ -116,4 +116,15 @@ import { BigNumber } from "ethers"
                   assert(raffleState == 1)
               })
           })
+          describe("fullfillRandomWords", () => {
+              beforeEach(async () => {
+                  await provider.send("evm_increaseTime", [interval.toNumber() + 1])
+                  await provider.request({ method: "evm_mine", params: [] })
+              })
+              it("can only be called after performUpkeep", async () => {
+                  await expect(
+                      vrfCoordinatorV2Mock.fulfillRandomWords(0, raffle.address)
+                  ).to.be.revertedWith("nonexistent request")
+              })
+          })
       })
