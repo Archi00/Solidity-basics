@@ -126,5 +126,50 @@ import { BigNumber } from "ethers"
                       vrfCoordinatorV2Mock.fulfillRandomWords(0, raffle.address)
                   ).to.be.revertedWith("nonexistent request")
               })
+              it("picks a winner, resets the lottery and sends the contract balance", async () => {
+                  const additionalPlayers = 3
+                  const startingAccIndex = 1
+                  const accounts = await ethers.getSigners()
+                  for (
+                      let i = startingAccIndex, l = startingAccIndex + additionalPlayers;
+                      i < l;
+                      i++
+                  ) {
+                      const accConnectedRaffle = raffle.connect(accounts[i])
+                      await accConnectedRaffle.enterRaffle({ value: entranceFee })
+                  }
+                  const startingTimeStamp = await raffle.getLatestTimestamp()
+
+                  await new Promise<void>(async (resolve, reject) => {
+                      raffle.once("WinnerPicked", async () => {
+                          console.log("Found the winner!")
+                          try {
+                              const recentWinner = await raffle.getRecentWinner()
+                              const raffleState = await raffle.getRaffleState()
+                              const endingTimestamp = await raffle.getLatestTimestamp()
+                              const winnerBalance = await accounts[3].getBalance()
+                              const numPlayers = await raffle.getNumPlayers()
+                              assert.equal(recentWinner.toString(), accounts[3].address)
+                              assert.equal(numPlayers.toString(), "0")
+                              assert.equal(raffleState.toString(), "0")
+                              assert.equal(
+                                  winnerBalance.toString(),
+                                  startingBalance.add(entranceFee.mul(additionalPlayers)).toString()
+                              )
+                              assert(endingTimestamp > startingTimeStamp)
+                          } catch (e) {
+                              reject(e)
+                          }
+                          resolve()
+                      })
+                      const tx = await raffle.performUpkeep([])
+                      const txReceipt = await tx.wait(1)
+                      const startingBalance = await accounts[3].getBalance()
+                      await vrfCoordinatorV2Mock.fulfillRandomWords(
+                          txReceipt.events![1].args!.requestId,
+                          raffle.address
+                      )
+                  })
+              })
           })
       })
