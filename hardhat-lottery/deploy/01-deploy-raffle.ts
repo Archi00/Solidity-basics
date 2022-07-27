@@ -50,7 +50,6 @@ const deployRaffle: DeployFunction = async function (hre: HardhatRuntimeEnvironm
     })
 
     if (!devChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-        log(`Verifying ${raffle.address}...`)
         await verify(raffle.address, args)
     }
 }
