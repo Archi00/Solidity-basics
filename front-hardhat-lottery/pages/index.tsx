@@ -1,5 +1,6 @@
 import type { NextPage } from "next"
 import Head from "next/head"
+import ManualHeader from "../components/ManualHeader"
 import styles from "../styles/Home.module.css"
 
 const Home: NextPage = () => {
@@ -10,6 +11,7 @@ const Home: NextPage = () => {
                 <meta name="description" content="Smart contract lottery" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <ManualHeader />
         </div>
     )
 }
