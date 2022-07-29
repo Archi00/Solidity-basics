@@ -26,7 +26,10 @@ const updateContractAddresses = async () => {
     fs.writeFileSync(FRONT_END_ADDRESSES_FILE, JSON.stringify(currentAddresses))
 }
 
-const updateAbi = async () => {}
+const updateAbi = async () => {
+    const raffle = await ethers.getContract("Raffle")
+    fs.writeFileSync(FRONT_END_ABI_FILE, raffle.interface.format(ethers.utils.FormatTypes.json))
+}
 
 export default updateFrontEnd
 updateFrontEnd.tags = ["all", "frontend"]
