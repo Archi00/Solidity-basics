@@ -51,11 +51,11 @@ import { BigNumber } from "ethers"
               it("doesn't allow entrance when raffle is calculating", async () => {
                   await raffle.enterRaffle({ value: entranceFee })
                   await provider.send("evm_increaseTime", [interval.toNumber() + 1])
-                  await provider.send("evm_mine", [])
+                  await provider.request({ method: "evm_mine", params: [] })
 
                   await raffle.performUpkeep([])
                   await expect(raffle.enterRaffle({ value: entranceFee })).to.be.revertedWith(
-                      "Raffle_NotOpen"
+                      "Raffle_NotOpen()"
                   )
               })
           })
