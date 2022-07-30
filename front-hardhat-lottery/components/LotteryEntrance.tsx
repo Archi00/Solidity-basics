@@ -1,7 +1,8 @@
 import { useWeb3Contract } from "react-moralis"
 import { abi, contractAddresses } from "../constants"
 import {useMoralis} from "react-moralis"
-import { useEffect } from "react"
+import { useEffect,useState } from "react"
+import { BigNumber } from "ethers"
 
 interface contractAddressesInterface{
     [key:string]: string[]
@@ -12,6 +13,8 @@ export default function LotteryEntrance() {
     const {chainId:chainIdHex,isWeb3Enabled}=useMoralis()
     const chainId:string = parseInt(chainIdHex!).toString()
     const raffleAddress = chainId in addresses?addresses[chainId][0] : null
+
+    const [entranceFee,setEntranceFee]=useState("0")
     
     const {runContractFunction: enterRaffle} = useWeb3Contract({
       abi,
@@ -29,7 +32,8 @@ export default function LotteryEntrance() {
     useEffect(()=>{
      if(isWeb3Enabled) {
       (async function(){
-        await getEntranceFee()
+        const entranceFeeFromCall=((await getEntranceFee())as BigNumber).toString()
+        setEntranceFee(entranceFeeFromCall)
       })()}
     },[isWeb3Enabled])
     return <div></div>
