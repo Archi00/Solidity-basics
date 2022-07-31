@@ -6,12 +6,14 @@ const { getContract } = ethers
 
 async function mockKeepers() {
     const raffle: Raffle = await getContract("Raffle")
-    const { upkeepNeeded } = await raffle.callStatic.checkUpkeep("")
+    const checkData = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(""))
+    const { upkeepNeeded } = await raffle.callStatic.checkUpkeep(checkData)
+
     if (upkeepNeeded) {
-        const tx = await raffle.performUpkeep("")
+        const tx = await raffle.performUpkeep(checkData)
+        console.log(tx)
         const txReceipt = await tx.wait(1)
         const requestId = txReceipt.events![1].args!.requestId
-        console.log(`Performed upkeep with requestId: ${requestId}`)
         if (devChains.includes(network.name)) {
             await mockVrf(requestId, raffle)
         } else {
