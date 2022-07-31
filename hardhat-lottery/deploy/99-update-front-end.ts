@@ -16,6 +16,7 @@ const updateFrontEnd: DeployFunction = async () => {
 const updateContractAddresses = async () => {
     const raffle = await ethers.getContract("Raffle")
     const chainId = network.config.chainId?.toString()
+    console.log(chainId)
     const currentAddresses = JSON.parse(fs.readFileSync(frontEndAddressesFile, "utf8"))
     if (chainId! in currentAddresses) {
         if (!currentAddresses[chainId!].includes(raffle.address)) {
