@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers"
+import { BigNumber, ContractReceipt, ContractTransaction } from "ethers"
 import { ethers, network } from "hardhat"
 import { devChains } from "../helper-hardhat-config"
 import { Raffle, VRFCoordinatorV2Mock } from "../typechain-types"
@@ -10,10 +10,10 @@ async function mockKeepers() {
     const { upkeepNeeded } = await raffle.callStatic.checkUpkeep(checkData)
 
     if (upkeepNeeded) {
-        const tx = await raffle.performUpkeep(checkData)
+        const tx: ContractTransaction = await raffle.performUpkeep(checkData, { gasLimit: 500000 })
         console.log(tx)
-        const txReceipt = await tx.wait(1)
-        const requestId = txReceipt.events![1].args!.requestId
+        const txReceipt: ContractReceipt = await tx.wait(1)
+        const requestId: BigNumber = txReceipt.events![1].args!.requestId
         if (devChains.includes(network.name)) {
             await mockVrf(requestId, raffle)
         } else {
