@@ -2,7 +2,7 @@ import { useWeb3Contract } from "react-moralis"
 import { abi, contractAddresses } from "../constants"
 import { useMoralis } from "react-moralis"
 import { useEffect, useState } from "react"
-import { BigNumber, ethers } from "ethers"
+import { BigNumber, ContractTransaction, ethers } from "ethers"
 import { useNotification } from "web3uikit"
 
 interface contractAddressesInterface {
@@ -44,13 +44,23 @@ export default function LotteryEntrance() {
         }
     }, [isWeb3Enabled])
 
+    const handleSuccess = async (tx: ContractTransaction) => {
+        await tx.wait(1)
+        handleNewNotification()
+    }
+
+    const handleNewNotification = () => {}
+
     return (
         <div>
             {raffleAddress ? (
                 <div>
                     <button
                         onClick={async () => {
-                            await enterRaffle()
+                            await enterRaffle({
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
+                                onError: (e) => console.log(e),
+                            })
                         }}
                     >
                         Enter Raffle
