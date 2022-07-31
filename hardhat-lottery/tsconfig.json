@@ -8,6 +8,6 @@
         // optional:
         // "suppressImplicitAnyIndexErrors": true
     },
-    "include": ["./deploy", "./test"],
+    "include": ["./deploy", "./test", "./scripts"],
     "files": ["./hardhat.config.ts", "./helper-hardhat-config.ts"]
 }
