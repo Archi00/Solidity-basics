@@ -20,8 +20,22 @@ const KOVAN_RPC_URL = process.env.KOVAN_RPC_URL || "https://eth-kovan"
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     networks: {
-        hardhat: { chainId: 31337 },
-        localhost: { chainId: 31337 },
+        hardhat: {
+            chainId: 31337,
+            from: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            throwOnTransactionFailures: true,
+            loggingEnabled: true,
+        },
+        localhost: {
+            chainId: 31337,
+            from: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            throwOnTransactionFailures: true,
+            loggingEnabled: true,
+            throwOnCallFailures: true,
+            mining: {
+                auto: true,
+            },
+        },
         rinkeby: {
             url: RINKEBY_RPC_URL,
             accounts: [PRIVATE_KEY],
