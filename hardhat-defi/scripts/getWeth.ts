@@ -12,4 +12,4 @@ async function getWeth() {
     console.log(`Got ${wethBalance.toString()} WETH`)
 }
 
-export { getWeth }
+export { getWeth, AMOUNT }
