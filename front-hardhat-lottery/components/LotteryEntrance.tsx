@@ -2,7 +2,7 @@ import { useWeb3Contract } from "react-moralis"
 import { abi, contractAddresses } from "../constants"
 import { useMoralis } from "react-moralis"
 import { useEffect, useState } from "react"
-import { BigNumber, ContractTransaction, ethers, ContractInterface, Signer } from "ethers"
+import { BigNumber, ContractTransaction, ethers, ContractInterface } from "ethers"
 import { useNotification } from "web3uikit"
 
 interface contractAddressesInterface {
@@ -11,7 +11,7 @@ interface contractAddressesInterface {
 
 export default function LotteryEntrance() {
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, enableWeb3 } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
     const raffleAddress = chainId in addresses ? addresses[chainId][0] : null
 
@@ -57,19 +57,33 @@ export default function LotteryEntrance() {
     }
 
     async function getContract() {
-        const wallet = ethers.Wallet.createRandom()
+        const moralisProvider: any = await enableWeb3()
         const raffle = new ethers.Contract(
             raffleAddress! as string,
             abi as ContractInterface,
-            wallet
+            moralisProvider
         )
-        console.log(raffle)
+        return raffle
+    }
+
+    const contractListener = async () => {
+        const contract = await getContract()
+        return await new Promise<void>(async (resolve, reject) => {
+            contract.on("WinnerPicked", (winner) => {
+                try {
+                    console.log(`Winner ${winner} updated!`)
+                    setRecentWinner(winner)
+                } catch (e) {
+                    reject(e)
+                }
+            })
+            resolve()
+        })
     }
 
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUI()
-            getContract()
         }
     }, [isWeb3Enabled])
 
