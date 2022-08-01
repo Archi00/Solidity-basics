@@ -21,7 +21,11 @@ export default function LotteryEntrance() {
 
     const dispatch = useNotification()
 
-    const { runContractFunction: enterRaffle } = useWeb3Contract({
+    const {
+        runContractFunction: enterRaffle,
+        isLoading,
+        isFetching,
+    } = useWeb3Contract({
         abi,
         contractAddress: raffleAddress!,
         functionName: "enterRaffle",
@@ -66,24 +70,26 @@ export default function LotteryEntrance() {
         return raffle
     }
 
-    const contractListener = async () => {
-        const contract = await getContract()
-        return await new Promise<void>(async (resolve, reject) => {
-            contract.on("WinnerPicked", (winner) => {
+    const contractListener = () => {
+        new Promise<void>(async (resolve, reject) => {
+            const contract = await getContract()
+            contract.once("WinnerPicked", async () => {
                 try {
-                    console.log(`Winner ${winner} updated!`)
+                    const winner = await contract.getRecentWinner()
+                    console.log(`Winner updated: ${winner}`)
                     setRecentWinner(winner)
                 } catch (e) {
                     reject(e)
                 }
+                resolve()
             })
-            resolve()
         })
     }
 
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUI()
+            // contractListener()
         }
     }, [isWeb3Enabled])
 
@@ -104,22 +110,28 @@ export default function LotteryEntrance() {
     }
 
     return (
-        <div>
+        <div className="p-5">
             {raffleAddress ? (
-                <div>
+                <div className="">
                     <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async () => {
                             await enterRaffle({
                                 onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (e) => console.log(e),
                             })
                         }}
+                        disabled={isLoading || isFetching}
                     >
-                        Enter Raffle
+                        {isLoading || isFetching ? (
+                            <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
+                        ) : (
+                            <div>Enter Raffle</div>
+                        )}
                     </button>
-                    Entrance Fee: {ethers.utils.formatUnits(entranceFee, "ether")}
-                    Players: {numPlayers}
-                    Recent Winner: {recentWinner}
+                    <div>Entrance Fee: {ethers.utils.formatUnits(entranceFee, "ether")}</div>
+                    <div>Players: {numPlayers}</div>
+                    <div>Recent Winner: {recentWinner}</div>
                 </div>
             ) : (
                 <div>No Raffle Address Detected</div>
