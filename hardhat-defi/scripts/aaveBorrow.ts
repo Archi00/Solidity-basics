@@ -17,7 +17,36 @@ async function main() {
     const amountDaiToBorrow = availableBorrowsETH.toString() * 0.95 * (1 / daiPrice.toNumber())
     console.log(`You can borrow ${amountDaiToBorrow} DAI`)
     const amountDaiToBorrowWei = ethers.utils.parseEther(amountDaiToBorrow.toString())
+    const daiTokenAddress = "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+    await borrowDai(daiTokenAddress, lendingPool, amountDaiToBorrowWei, deployer)
+    await getBorrowUserData(lendingPool, deployer)
+    await repay(lendingPool, daiTokenAddress, amountDaiToBorrowWei, deployer)
+    await getBorrowUserData(lendingPool, deployer)
 }
+
+async function repay(
+    lendingPool: Contract,
+    daiTokenAddress: string,
+    amount: BigNumber,
+    account: string
+) {
+    await approveErc20(daiTokenAddress, lendingPool.address, amount, account)
+    const repayTx = await lendingPool.repay(daiTokenAddress, amount, 1, account)
+    await repayTx.wait(1)
+    console.log("Repayed!")
+}
+
+async function borrowDai(
+    daiAddress: string,
+    lendingPool: Contract,
+    amountDaiToBorrowWei: BigNumber,
+    account: string
+) {
+    const borrowTx = await lendingPool.borrow(daiAddress, amountDaiToBorrowWei, 1, 0, account)
+    await borrowTx.wait(1)
+    console.log("You have borrowed!")
+}
+
 async function getDaiPrice() {
     const daiEthPriceFeed = await ethers.getContractAt(
         "AggregatorV3Interface",
