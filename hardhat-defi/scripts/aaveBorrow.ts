@@ -3,6 +3,8 @@ import { ethers, getNamedAccounts } from "hardhat"
 async function main() {
     await getWeth()
     const { deployer } = await getNamedAccounts()
+    const lendingPool = await getLendingPool(deployer)
+    console.log(`Lending pool address ${lendingPool.address}`)
 }
 
 async function getLendingPool(account: string) {
@@ -12,11 +14,8 @@ async function getLendingPool(account: string) {
         account
     )
     const lendingPoolAddress = await lendingPoolAddressProvider.getLendingPool()
-    const lendingPool = await ethers.getContractAt(
-        "ILendingPool",
-        "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
-        account
-    )
+    const lendingPool = await ethers.getContractAt("ILendingPool", lendingPoolAddress, account)
+    return lendingPool
 }
 
 main()
