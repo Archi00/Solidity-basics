@@ -35,6 +35,7 @@ async function fund() {
   if (typeof window.ethereum !== "undefined") {
     console.log(`Funding with: ${ethAmount}...`)
     const provider = new ethers.providers.Web3Provider(window.ethereum)
+    console.log(provider)
     const signer = provider.getSigner()
     const contract = new ethers.Contract(contractAddress, abi, signer)
     try {
