@@ -1,25 +1,27 @@
-import { deployments, getNamedAccounts, network } from "hardhat"
-import { devChains, waitBlockConfirmations } from "../helper-hardhat-config"
+import { deployments, ethers, getNamedAccounts, network } from "hardhat"
+import { VRFCoordinatorV2Mock } from "../typechain-types"
+import { devChains, networkConfig, waitBlockConfirmations } from "../helper-hardhat-config"
 import { verify } from "../utils/verify"
 
 async function deployRandomIpfsNft() {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
+    const chainId = network.config.chainId
+    let vrfCoordinatorV2Address: string
+    let subId: string
 
-    log("------------------------------")
-    const args: any[] = []
-    const randomIpfsNft = await deploy("RandomIpfsNFt", {
-        from: deployer,
-        args,
-        log: true,
-        waitConfirmations: !devChains.includes(network.name) ? waitBlockConfirmations : 1,
-    })
-
-    if (!devChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-        log("Not in a local network, verifying contract...")
-        await verify(randomIpfsNft.address, args)
+    if (devChains.includes(network.name)) {
+        const VRFCoordinatorV2Mock: VRFCoordinatorV2Mock = await ethers.getContract(
+            "VRFCoordinatorV2Mock"
+        )
+        vrfCoordinatorV2Address = VRFCoordinatorV2Mock.address
+        const tx = await VRFCoordinatorV2Mock.createSubscription()
+        const txReceipt = await tx.wait(1)
+        subId = txReceipt.events![0].args!.subId
+    } else {
+        vrfCoordinatorV2Address = networkConfig[chainId!]["vrfCoordinatorV2"]!
+        subId = networkConfig[chainId!]["subId"]!
     }
-    log("------------------------------")
 }
 
 deployRandomIpfsNft.tags = ["all", "random"]
