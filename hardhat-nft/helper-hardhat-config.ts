@@ -1,5 +1,5 @@
 export interface networkConfigItem {
-    name?: string
+    name: string
     subId?: string
     keepersUpdateInterval?: string
     raffleEntranceFee?: string
