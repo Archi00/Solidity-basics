@@ -22,4 +22,5 @@ async function deployBasicNft() {
     log("------------------------------")
 }
 
+deployBasicNft.tags = ["all", "basic"]
 export default deployBasicNft
