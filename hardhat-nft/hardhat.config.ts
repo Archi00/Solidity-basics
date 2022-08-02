@@ -31,7 +31,7 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API k
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "Your polygonscan API key"
 const REPORT_GAS = process.env.REPORT_GAS || false
 
-module.exports = {
+const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     networks: {
         hardhat: {
@@ -86,6 +86,7 @@ module.exports = {
         },
     },
     gasReporter: {
+        //@ts-ignore
         enabled: REPORT_GAS,
         currency: "USD",
         outputFile: "gas-report.txt",
@@ -106,25 +107,11 @@ module.exports = {
         },
     },
     solidity: {
-        compilers: [
-            {
-                version: "0.4.19",
-            },
-            {
-                version: "0.4.24",
-            },
-            {
-                version: "0.6.6",
-            },
-            {
-                version: "0.6.12",
-            },
-            {
-                version: "0.8.7",
-            },
-        ],
+        compilers: [{ version: "0.8.9" }, { version: "0.8.0" }, { version: "0.8.1" }],
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests
     },
 }
+
+export default config
